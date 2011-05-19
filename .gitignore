@@ -1,0 +1,17 @@
+GAC
+bin
+Bin
+obj
+*.user
+*.docstates
+*.cache
+*.suo
+.project
+.hg
+_BuildReports
+Index.dat
+Storage.dat
+TestResult.xml
+log.txt
+*.vs10x
+Gemfile.lock

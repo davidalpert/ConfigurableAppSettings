@@ -1,0 +1,10 @@
+source :rubygems
+
+gem 'albacore'
+
+group :dev do
+end
+
+group :tools do
+end
+

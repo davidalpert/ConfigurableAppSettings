@@ -1,0 +1,99 @@
+require 'rubygems'
+require 'bundler'
+
+system "bundle install --system"
+
+require 'rake/clean'
+require 'albacore'
+
+include FileUtils
+
+nuget_root = "./nuget"
+nuget_lib = "#{nuget_root}/lib"
+source_root = "./src"
+test_root = "./tests"
+lib_root = "./lib"
+packages_root = "./Packages"
+
+CLEAN.include("#{source_root}/**/bin", "#{source_root}/**/obj", "#{test_root}/**/obj", "#{test_root}/**/bin")
+
+CLOBBER.include("./**/_*", "./**/*.user", "./**/*.cache", "./**/*.suo", "TestResult.xml")
+
+commit = Git.open(".").log.first.sha[0..10] rescue 'na'
+solution_file = FileList["#{source_root}/*.sln"].first
+
+# ---------------------------------------------------------------------------------------------------------
+# and so begin the build script tasks/targets
+
+desc 'Default: run a clean build'
+task :default => ["clean", "build"]
+
+task :build => ["build:all"]
+namespace :build do
+
+	desc "Build the project"
+	msbuild :all, :config do |msb, args|
+		configuration = args[:config] || :Debug
+
+		puts configuration
+
+		msb.properties :configuration => configuration
+		msb.targets :Clean, :Build
+		msb.solution = solution_file
+	end
+end
+
+task :publish => ["deploy:publish"]
+task :deploy => ["deploy:publish"]
+namespace :deploy do
+
+	desc "Publish nuspec package"
+	task :publish, [:package, :version, :path] do |t, args|
+		Rake::Task["util:clean_folder"].invoke(nuget_root)
+		Dir.mkdir(nuget_lib)
+		puts "Using path #{args.path}"
+		FileList["#{args.path}/*.dll"].each { |f| cp f, nuget_lib }
+		Rake::Task["deploy:spec"].invoke(args.package, args.version)
+		Rake::Task["deploy:package"].invoke(args.package, args.version)
+		# Here you could use FTP or any other way of publishing your package
+		cp "nuget/#{args.package}.#{args.version}.nupkg", "PUT HERE THE NUGET FOLDER"
+	end
+
+	nuspec :spec, [:package_id, :version]  do |t, args|
+		t.id = args.package_id
+		t.version = args.version
+		t.authors = "Price Developer"
+		t.description = "#{args.package_id} library"
+		t.summary = "#{args.package_id} library"
+		t.language = "en-US"
+		t.working_directory = "nuget"
+		t.output_file = "#{args.package_id}.#{args.version}.nuspec"
+	end
+
+	nugetpack :package, [:package_id, :version] do |t, args|
+		t.nuspec = "nuget/#{args.package_id}.#{args.version}.nuspec"
+		t.output = "nuget"
+	end
+
+end
+
+namespace :util do
+
+	# removes and recreate the given folder
+	task :clean_folder, :folder do |t, args|
+		rm_rf(args.folder)
+		Dir.mkdir(args.folder) unless File.directory? args.folder
+	end
+
+	# removes those .orig files that get left behind by git merges
+	task :rm_orig do
+		FileList["./**/*.orig"].each { |f| rm f }
+	end
+
+	# gets the svn version
+	def svn_version
+		version_range = `./tools/svn/svnversion`.match('(\d+)(?::(\d+))?') rescue [-1]
+		version_range[2] || version_range[1] || ENV["BUILD_VCS_NUMBER"]
+	end
+end
+
