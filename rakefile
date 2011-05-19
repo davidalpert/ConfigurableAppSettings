@@ -13,7 +13,8 @@ nuget_lib = "#{nuget_root}/lib"
 source_root = "./src"
 test_root = "./tests"
 lib_root = "./lib"
-packages_root = "./Packages"
+packages_root = "#{source_root}/Packages"
+nuget_exe = 'nuget'
 
 CLEAN.include("#{source_root}/**/bin", "#{source_root}/**/obj", "#{test_root}/**/obj", "#{test_root}/**/bin")
 
@@ -28,11 +29,20 @@ solution_file = FileList["#{source_root}/*.sln"].first
 desc 'Default: run a clean build'
 task :default => ["clean", "build"]
 
+namespace :setup do
+	desc "Setup dependencies for nuget packages"
+	task :dep do
+		FileList["**/packages.config"].each do |file|
+			sh "#{nuget_exe} install #{file} /OutputDirectory #{packages_root}"
+		end
+	end
+end
+
 task :build => ["build:all"]
 namespace :build do
 
 	desc "Build the project"
-	msbuild :all, :config do |msb, args|
+	msbuild :all, [:config] => ["setup:dep"] do |msb, args|
 		configuration = args[:config] || :Debug
 
 		puts configuration

@@ -8,6 +8,7 @@ obj
 *.suo
 .project
 .hg
+src/Packages
 _BuildReports
 Index.dat
 Storage.dat
