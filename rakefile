@@ -16,6 +16,10 @@ lib_root = "./lib"
 packages_root = "#{source_root}/Packages"
 nuget_exe = 'nuget'
 
+authors_txt = 'David Alpert (@davidalpert)'
+description_txt = 'ConfigurableAppSettings'
+summary_txt = 'ConfigurableAppSettings'
+
 CLEAN.include("#{source_root}/**/bin", "#{source_root}/**/obj", "#{test_root}/**/obj", "#{test_root}/**/bin")
 
 CLOBBER.include("./**/_*", "./**/*.user", "./**/*.cache", "./**/*.suo", "TestResult.xml")
@@ -66,23 +70,23 @@ namespace :deploy do
 		Rake::Task["deploy:spec"].invoke(args.package, args.version)
 		Rake::Task["deploy:package"].invoke(args.package, args.version)
 		# Here you could use FTP or any other way of publishing your package
-		cp "nuget/#{args.package}.#{args.version}.nupkg", "PUT HERE THE NUGET FOLDER"
+		cp "#{nuget_root}/#{args.package}.#{args.version}.nupkg", "PUT HERE THE NUGET FOLDER"
 	end
 
 	nuspec :spec, [:package_id, :version]  do |t, args|
 		t.id = args.package_id
 		t.version = args.version
-		t.authors = "Price Developer"
-		t.description = "#{args.package_id} library"
-		t.summary = "#{args.package_id} library"
+		t.authors = authors_txt
+		t.description = description_txt
+		t.summary = summary_txt
 		t.language = "en-US"
-		t.working_directory = "nuget"
+		t.working_directory = "#{nuget_root}"
 		t.output_file = "#{args.package_id}.#{args.version}.nuspec"
 	end
 
 	nugetpack :package, [:package_id, :version] do |t, args|
-		t.nuspec = "nuget/#{args.package_id}.#{args.version}.nuspec"
-		t.output = "nuget"
+		t.nuspec = "#{nuget_root}/#{args.package_id}.#{args.version}.nuspec"
+		t.output = "#{nuget_root}"
 	end
 
 end
