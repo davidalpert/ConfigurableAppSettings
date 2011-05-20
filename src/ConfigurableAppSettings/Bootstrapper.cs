@@ -2,37 +2,6 @@
 
 namespace ConfigurableAppSettings
 {
-	public interface IContainerExtender
-	{
-		object Container { get; }
-
-		IContainerExtender AddSettingsFromAssemblyContaining<T>();
-
-		void Initialize();
-	}
-
-	public abstract class ContainerExtender : IContainerExtender
-	{
-		public object Container { get; private set; }
-
-		/// <summary>
-		/// Initializes a new instance of the ContainerExtender class.
-		/// </summary>
-		public ContainerExtender() : this( null ) { }
-
-		/// <summary>
-		/// Initializes a new instance of the ContainerExtender class.
-		/// </summary>
-		public ContainerExtender( object container )
-		{
-			Container = container;
-		}
-
-		abstract public IContainerExtender AddSettingsFromAssemblyContaining<T>();
-
-		abstract public void Initialize();
-	}
-
 	public class Bootstrap
 	{
 		public static IContainerExtender With<T>()

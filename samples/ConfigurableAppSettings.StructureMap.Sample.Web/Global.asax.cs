@@ -43,9 +43,9 @@ namespace ConfigurableAppSettings.StructureMap.Sample.Web
 
 		public void InitializeContainer()
 		{
+			// 1. configure your app's dependencies
 			ObjectFactory.Initialize( cfg =>
 			{
-				// 1. configure your app's dependencies
 				cfg.Scan( a =>
 				{
 					a.TheCallingAssembly();

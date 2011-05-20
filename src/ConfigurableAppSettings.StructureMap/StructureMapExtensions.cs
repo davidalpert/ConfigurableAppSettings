@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using StructureMap;
+using ConfigurableAppSettings.Implementation;
 using ConfigurableAppSettings.StructureMap.Conventions;
 using ConfigurableAppSettings.StructureMap.Implementation;
 
@@ -24,16 +25,6 @@ namespace ConfigurableAppSettings
 		public StructureMapExtensions( object container )
 			: base( container )
 		{
-			this.assemblyTypeMarkers = new HashSet<Type>();
-		}
-
-		ICollection<Type> assemblyTypeMarkers;
-
-		public override IContainerExtender AddSettingsFromAssemblyContaining<T>()
-		{
-			assemblyTypeMarkers.Add( typeof( T ) );
-
-			return this;
 		}
 
 		public override void Initialize()

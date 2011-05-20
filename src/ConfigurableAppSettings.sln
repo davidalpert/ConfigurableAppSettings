@@ -55,4 +55,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{0842FA77-6C7F-4802-A76D-E2F3503A1E7D} = {1B974D82-3E53-46A3-89EE-7573D60A0C9A}
 	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35;packages\Unity.Interception.2.1.505.0\lib\NET35
+	EndGlobalSection
 EndGlobal
