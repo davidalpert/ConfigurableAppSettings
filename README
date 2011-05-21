@@ -1,0 +1,16 @@
+_ConfigurableAppSettings_ is a standalone assembly that you can drop into your project to implement the core functionality described by Joshua Flanagan in his post [How we handle application configuration](http://lostechies.com/joshuaflanagan/2009/07/13/how-we-handle-application-configuration/).
+
+Included here is an extensible implementation with a supporting _ConfigurableAppSettings.StructureMap_ assembly that extends the core functionality with [StructureMap](http://structuremap.net/structuremap/index.html) support.
+
+My intention was to abstract this in such a way that:
+
+1. it could be dropped into any app, either manually or as a nuget package; and
+2. it could be used with any IoC container that supports the Enrich pattern of interception.
+
+This project includes a sample MVC3 app using the core project and the StructureMap extension.  Change (or remove) the SampleSettings.Greeting AppSetting entry in the web project's web.config to see that you can override this setting or revert back to the hard-coded default value all without recompiling the app.  This works great with VS2010's web.config transformations as we are using it in production where we can feed different SMTP settings into our app by stashing them in web.config.Debug, web.config.Stage, & web.config.Release.
+
+Currently, _ConfigurableAppSettings_ supports the following containers:
+
+* [StructureMap](http://structuremap.net/structuremap/index.html)
+
+If you know of another IoC container that can run an arbitrary lambda against a newly created object before it gets passed to any consumers (i.e. the equivalent of StructureMap's [EnrichWith](http://codebetter.com/jeremymiller/2009/01/21/interception-capabilities-of-structuremap-2-5/) interception), please [let me know](https://github.com/inbox/new/davidalpert).  Or, [fork the code](https://github.com/davidalpert/ConfigurableAppSettings) and contribute a patch.
