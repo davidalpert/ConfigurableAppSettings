@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle( "ConfigurableAppSettings" )]
-[assembly: AssemblyDescription( "" )]
+[assembly: AssemblyDescription( "ConfigurableAppSettings allows drop-in support for strongly-typed *Settings classes that are overridable via app.config or web.config" )]
 [assembly: AssemblyConfiguration( "" )]
-[assembly: AssemblyCompany( "Microsoft" )]
+[assembly: AssemblyCompany( "David Alpert" )]
 [assembly: AssemblyProduct( "ConfigurableAppSettings" )]
-[assembly: AssemblyCopyright( "Copyright © Microsoft 2011" )]
+[assembly: AssemblyCopyright( "" )]
 [assembly: AssemblyTrademark( "" )]
 [assembly: AssemblyCulture( "" )]
 

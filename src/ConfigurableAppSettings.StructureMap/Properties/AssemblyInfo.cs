@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle( "ConfigurableAppSettings.StructureMap" )]
-[assembly: AssemblyDescription( "" )]
+[assembly: AssemblyDescription("ConfigurableAppSettings.StructureMap extends ConfigurableAppSettings with StructureMap integration")]
 [assembly: AssemblyConfiguration( "" )]
-[assembly: AssemblyCompany( "Microsoft" )]
+[assembly: AssemblyCompany( "David Alpert" )]
 [assembly: AssemblyProduct( "ConfigurableAppSettings.StructureMap" )]
-[assembly: AssemblyCopyright( "Copyright © Microsoft 2011" )]
+[assembly: AssemblyCopyright( "" )]
 [assembly: AssemblyTrademark( "" )]
 [assembly: AssemblyCulture( "" )]
 
