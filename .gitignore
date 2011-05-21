@@ -17,3 +17,4 @@ log.txt
 *.vs10x
 Gemfile.lock
 nuget
+*.nupkg
