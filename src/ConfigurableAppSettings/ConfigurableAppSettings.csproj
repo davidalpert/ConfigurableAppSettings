@@ -87,8 +87,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AppSettingsKeyNamingStrategy.cs" />
+    <Compile Include="Implementation\AppSettingsKeyNamingStrategy.cs" />
     <Compile Include="Bootstrapper.cs" />
+    <Compile Include="Implementation\SettingPropertyProvider.cs" />
+    <Compile Include="IDiscoverSettingProperties.cs" />
     <Compile Include="Implementation\ContainerExtender.cs" />
     <Compile Include="EnumHelper.cs" />
     <Compile Include="IAppSettingsDiagnosticsProvider.cs" />
@@ -97,7 +99,8 @@
     <Compile Include="IDictionaryConvertible.cs" />
     <Compile Include="Implementation\DictionaryConvertible.cs" />
     <Compile Include="Implementation\SettingsProvider.cs" />
-    <Compile Include="ISettingsProvider.cs" />
+    <Compile Include="IBuildUpSettings.cs" />
+    <Compile Include="NotConfigurableAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

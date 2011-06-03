@@ -5,20 +5,23 @@ using System.Reflection;
 
 namespace ConfigurableAppSettings
 {
-	public class SettingsProvider : ISettingsProvider
+	public class SettingsProvider : IBuildUpSettings
 	{
 		IAppSettingsKeyNamingStrategy namingStrategy;
+		IDiscoverSettingProperties settingPropertyProvider;
 
 		/// <summary>
 		/// Initializes a new instance of the SettingsProvider class.
 		/// </summary>
 		/// <param name="namingStrategy"></param>
-		public SettingsProvider( IAppSettingsKeyNamingStrategy namingStrategy )
+		/// <param name="settingsPropertyProvider"></param>
+		public SettingsProvider( IAppSettingsKeyNamingStrategy namingStrategy, IDiscoverSettingProperties settingsPropertyProvider )
 		{
 			this.namingStrategy = namingStrategy;
+			this.settingPropertyProvider = settingsPropertyProvider;
 		}
 
-		public DictionaryConvertible PopulateSettings( DictionaryConvertible instance )
+		public DictionaryConvertible InjectConfiguredSettings( DictionaryConvertible instance )
 		{
 			Type[] types = new Type[1];
 			types[0] = typeof( string );
@@ -27,7 +30,7 @@ namespace ConfigurableAppSettings
 			{
 				// use reflection to iterate over each public property of instance except for 'Problems' 
 				// which is reserved for error messages on the object
-				var properties = instance.GetType().GetProperties().Where( prop => ( prop.Name.Equals( "Problems" ) == false ) );
+				var properties = settingPropertyProvider.GetSettingsProperties( instance );
 
 				foreach ( PropertyInfo property in properties )
 				{

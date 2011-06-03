@@ -13,7 +13,7 @@ namespace ConfigurableAppSettings.StructureMap.Conventions
 			registry.For( type )
 				.EnrichWith( ( session, original ) =>
 				{
-					return session.GetInstance<ISettingsProvider>().PopulateSettings( (DictionaryConvertible)original );
+					return session.GetInstance<IBuildUpSettings>().InjectConfiguredSettings( (DictionaryConvertible)original );
 				} )
 				.Use( type );
 		}

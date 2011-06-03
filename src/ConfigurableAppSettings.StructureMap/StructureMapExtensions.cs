@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using StructureMap;
 using ConfigurableAppSettings.Implementation;
@@ -11,21 +10,18 @@ namespace ConfigurableAppSettings
 	public class StructureMapExtensions : ContainerExtender
 	{
 		/// <summary>
-		/// Initializes a new instance of the Bootstrap class.
+		/// Initializes a new instance of the StructureMapExtensions class
+		/// for the default IContainer (via the static ObjectFactory.Container
+		/// property.
 		/// </summary>
 		/// <param name="assemblyTypeMarkers"></param>
-		public StructureMapExtensions()
-			: this( null )
-		{
-		}
+		public StructureMapExtensions() : this( null ) { }
 
 		/// <summary>
-		/// Initializes a new instance of the StructureMapExtensions class.
+		/// Initializes a new instance of the StructureMapExtensions class
+		/// for a given IContainer.
 		/// </summary>
-		public StructureMapExtensions( object container )
-			: base( container )
-		{
-		}
+		public StructureMapExtensions( object container ) : base( container ) { }
 
 		public override void Initialize()
 		{
@@ -43,7 +39,8 @@ namespace ConfigurableAppSettings
 
 				cfg.For<IAppSettingsKeyNamingStrategy>().Use<AppSettingsKeyNamingStrategy>();
 				cfg.For<IAppSettingsDiagnosticsProvider>().Use<AppSettingsDiagnosticsProvider>();
-				cfg.For<ISettingsProvider>().Use<SettingsProvider>();
+				cfg.For<IBuildUpSettings>().Use<SettingsProvider>();
+				cfg.For<IDiscoverSettingProperties>().Use<SettingPropertyProvider>();
 			} );
 		}
 	}
