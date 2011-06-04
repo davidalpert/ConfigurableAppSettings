@@ -4,6 +4,7 @@ namespace ConfigurableAppSettings
 {
 	public interface IAppSettingsDiagnosticsProvider
 	{
-		string ExtractSampleSettings();
+		string GetSettingsAsXml();
+		string GetSettingsAsXml( bool showDefaults );
 	}
 }

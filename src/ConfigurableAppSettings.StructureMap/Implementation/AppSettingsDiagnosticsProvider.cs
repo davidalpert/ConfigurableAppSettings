@@ -28,19 +28,24 @@ namespace ConfigurableAppSettings.StructureMap.Implementation
 			this.settingsProvider = settingsProvider;
 		}
 
-		public string ExtractSampleSettings()
+		public string GetSettingsAsXml()
+		{
+			return GetSettingsAsXml( false );
+		}
+
+		public string GetSettingsAsXml( bool showDefaults )
 		{
 			var settingTypes = ObjectFactory.Container.Model.PluginTypes
 				.Where( t => t.PluginType.Name.EndsWith( "Settings" ) && t.PluginType.BaseType == typeof( DictionaryConvertible ) )
 				.Select( t => t.PluginType );
 
 			StringWriter output = new StringWriter();
-			writeSettings( settingTypes, output );
+			writeSettings( settingTypes, output, showDefaults );
 
 			return output.ToString();
 		}
 
-		private void writeSettings( IEnumerable<Type> settingTypes, TextWriter output )
+		private void writeSettings( IEnumerable<Type> settingTypes, TextWriter output, bool showDefaults )
 		{
 			var xml = new XmlTextWriter( output ) { Formatting = Formatting.Indented };
 			xml.WriteStartElement( "appSettings" );
@@ -49,8 +54,9 @@ namespace ConfigurableAppSettings.StructureMap.Implementation
 				// create an instance
 				var settingsInstance = Activator.CreateInstance( t ) as DictionaryConvertible;
 
-				// overwrite defaults with web.config/app.config values
-				settingsProvider.InjectConfiguredSettings( settingsInstance );
+				if ( !showDefaults )
+					// overwrite defaults with web.config/app.config values
+					settingsProvider.InjectConfiguredSettings( settingsInstance );
 
 				// then iterate over the properties
 				settingPropertyProvider.GetSettingsProperties( settingsInstance )

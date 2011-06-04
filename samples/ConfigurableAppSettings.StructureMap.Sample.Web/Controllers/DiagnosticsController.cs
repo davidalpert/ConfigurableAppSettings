@@ -24,7 +24,7 @@ namespace ConfigurableAppSettings.StructureMap.Sample.Web.Controllers
 		// NOTE: you can "hide" this route by only mapping it when Debug is enabled, for example.
 		public ActionResult Index()
 		{
-			string sampleConfigEntries = appSettingsDiagnosticsProvider.ExtractSampleSettings();
+			string sampleConfigEntries = appSettingsDiagnosticsProvider.GetSettingsAsXml();
 
 			return Content( "<pre>"+Server.HtmlEncode( sampleConfigEntries )+"</pre>" );
 		}
