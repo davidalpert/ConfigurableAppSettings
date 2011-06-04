@@ -12,14 +12,20 @@ namespace ConfigurableAppSettings.StructureMap.Implementation
 	public class AppSettingsDiagnosticsProvider : IAppSettingsDiagnosticsProvider
 	{
 		IAppSettingsKeyNamingStrategy keyNamingStrategy;
+		IDiscoverSettingProperties settingPropertyProvider;
+		IBuildUpSettings settingsProvider;
 
 		/// <summary>
 		/// Initializes a new instance of the AppSettingsDiagnosticsProvider class.
 		/// </summary>
 		/// <param name="keyNamingStrategy"></param>
-		public AppSettingsDiagnosticsProvider( IAppSettingsKeyNamingStrategy keyNamingStrategy )
+		/// <param name="settingPropertyProvider"></param>
+		/// <param name="settingsProvider"></param>
+		public AppSettingsDiagnosticsProvider( IAppSettingsKeyNamingStrategy keyNamingStrategy, IDiscoverSettingProperties settingPropertyProvider, IBuildUpSettings settingsProvider )
 		{
 			this.keyNamingStrategy = keyNamingStrategy;
+			this.settingPropertyProvider = settingPropertyProvider;
+			this.settingsProvider = settingsProvider;
 		}
 
 		public string ExtractSampleSettings()
@@ -29,24 +35,30 @@ namespace ConfigurableAppSettings.StructureMap.Implementation
 				.Select( t => t.PluginType );
 
 			StringWriter output = new StringWriter();
-			dumpSettings( settingTypes, output );
+			writeSettings( settingTypes, output );
 
 			return output.ToString();
 		}
 
-		private void dumpSettings( IEnumerable<Type> settingTypes, TextWriter output )
+		private void writeSettings( IEnumerable<Type> settingTypes, TextWriter output )
 		{
 			var xml = new XmlTextWriter( output ) { Formatting = Formatting.Indented };
 			xml.WriteStartElement( "appSettings" );
 			settingTypes.ToList().ForEach( t =>
 			{
-				var settings = Activator.CreateInstance( t );
-				var properties = t.GetProperties( BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.Public );
+				// create an instance
+				var settingsInstance = Activator.CreateInstance( t ) as DictionaryConvertible;
 
-				properties.ToList().ForEach( p =>
+				// overwrite defaults with web.config/app.config values
+				settingsProvider.InjectConfiguredSettings( settingsInstance );
+
+				// then iterate over the properties
+				settingPropertyProvider.GetSettingsProperties( settingsInstance )
+										.ToList()
+										.ForEach( p =>
 				{
 					var key = keyNamingStrategy.GetKeyFor( t, p );
-					var value = p.GetValue( settings, null );
+					var value = p.GetValue( settingsInstance, null );
 
 					xml.WriteStartElement( "add" );
 					xml.WriteAttributeString( "key", key );
